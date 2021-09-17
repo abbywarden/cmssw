@@ -83,7 +83,6 @@ void CSCStubResolutionValidation::analyze(const edm::Event& e, const edm::EventS
     // Key: ChamberID, Value : CSCStubDigiContainer
     const auto& clcts = cscStubMatcher_->clcts();
 
-
     //CLCTs
     for (auto& [id, container] : clcts) {
       const CSCDetId cscId(id);
@@ -99,11 +98,6 @@ void CSCStubResolutionValidation::analyze(const edm::Event& e, const edm::EventS
       int deltaStrip = 0;
       if (cscId.station() == 1 and cscId.ring() == 4 and clct.getKeyStrip() > CSCConstants::MAX_HALF_STRIP_ME1B)
       	deltaStrip = CSCConstants::NUM_HALF_STRIPS_ME1B;
-
-      //get the matched stub's keystrip
-      // const int hs_clct = clct.getKeyStrip(2);
-      // const int qs_clct = clct.getKeyStrip(4);
-      // const int es_clct = clct.getKeyStrip(8);
 
       // fractional strip
        const float fhs_clct = clct.getFractionalStrip(2);
@@ -135,23 +129,22 @@ void CSCStubResolutionValidation::analyze(const edm::Event& e, const edm::EventS
 
       //print statements
       if (chamberType -1 ==0){
-	std::cout << "clct" << clct << std::endl;
-	std::cout << "fhs_clct " << fhs_clct << std::endl;
-	std::cout << "deltaStrip " << deltaStrip << std::endl;
-	std::cout << "strip_csc_sh " << strip_csc_sh << std::endl;
+        std::cout << "clct" << clct << std::endl;
+        std::cout << "fhs_clct " << fhs_clct << std::endl;
+        std::cout << "deltaStrip " << deltaStrip << std::endl;
+        std::cout << "strip_csc_sh " << strip_csc_sh << std::endl;
       }
-
     }
 
     for (int i = 0; i < 10; i++) {
       if (hitCLCT[i]) {
 
-	//fill histograms
-	posresCLCT_hs[i]->Fill(delta_fhs_clct[i]);
-	posresCLCT_qs[i]->Fill(delta_fqs_clct[i]);
-	posresCLCT_es[i]->Fill(delta_fes_clct[i]);
+        //fill histograms
+        posresCLCT_hs[i]->Fill(delta_fhs_clct[i]);
+        posresCLCT_qs[i]->Fill(delta_fqs_clct[i]);
+        posresCLCT_es[i]->Fill(delta_fes_clct[i]);
 
-	bendresCLCT[i]->Fill(dslope_clct[i]);
+        bendresCLCT[i]->Fill(dslope_clct[i]);
       }
     }
   }
