@@ -97,7 +97,7 @@ void CSCStubResolutionValidation::analyze(const edm::Event& e, const edm::EventS
       //calculate deltastrip
       int deltaStrip = 0;
       if (cscId.station() == 1 and cscId.ring() == 4 and clct.getKeyStrip() > CSCConstants::MAX_HALF_STRIP_ME1B)
-      	deltaStrip = CSCConstants::NUM_HALF_STRIPS_ME1B;
+      	deltaStrip = CSCConstants::NUM_HALF_STRIPS_ME1B -64;
 
       // fractional strip
        const float fhs_clct = clct.getFractionalStrip(2);
