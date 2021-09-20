@@ -19,7 +19,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(500),
+    input = cms.untracked.int32(1000),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
@@ -36,6 +36,15 @@ process.source = cms.Source(
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2021_realistic', '')
 
+
+# CSC Trigger Primitives emulator
+process.load("L1Trigger.CSCTriggerPrimitives.cscTriggerPrimitiveDigis_cfi")
+l1csc =process.simCscTriggerPrimitiveDigis
+l1csc.commonParam.runCCLUT = True
+l1csc.CSCComparatorDigiProducer = cms.InputTag( 'simMuonCSCDigis', 'MuonCSCComparatorDigi')
+l1csc.CSCWireDigiProducer = cms.InputTag( 'simMuonCSCDigis', 'MuonCSCWireDigi')
+
+
 process.DQMoutput = cms.OutputModule("DQMRootOutputModule",
     dataset = cms.untracked.PSet(
         dataTier = cms.untracked.string('DQMIO'),
@@ -47,12 +56,14 @@ process.DQMoutput = cms.OutputModule("DQMRootOutputModule",
 )
 
 # Path and EndPath definitions
+process.l1sim_step = cms.Path(l1csc)
 process.validation_step = cms.Path(process.mix * process.cscDigiValidation)
 process.endjob_step = cms.EndPath(process.endOfProcess)
 process.DQMoutput_step = cms.EndPath(process.DQMoutput)
 
 # Schedule definition
 process.schedule = cms.Schedule(
+    process.l1sim_step,
     process.validation_step,
     process.endjob_step,
     process.DQMoutput_step
